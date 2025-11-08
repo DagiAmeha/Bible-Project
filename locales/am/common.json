@@ -1,0 +1,31 @@
+{
+  "appTitle": "የመጽሐፍ ቅዱስ ንባብ መከታተያ",
+  "landingSubtitle": "ዕለታዊ ልምድ ያበርክቱ፣ እድገቶትን ያሳዩ፣ ውይይት ያድርጉ፣ እራስዎን ጠንካራ ያድርጉ።",
+  "Login": "መግባት",
+  "Signup": "መመዝገብ",
+  "Continue": "ቀጥል",
+  "Email": "ኢሜይል",
+  "dashboard": "ዳሽቦርድ",
+  "Password": "የሚስጥር ቃል ",
+  "Password Confirm": "የሚስጥር ቃል አረጋግጥ",
+  "tracker": "መከታተያ",
+  "chat": "ውይይት",
+  "profile": "መገለጫ",
+  "navigation": "አመራር",
+  "weeklyProgress": "የሳምንት እድገት",
+  "todaySummary": "የዛሬ ማጠቃለያ",
+  "selectBook": "መጽሐፍ ምረጥ",
+  "markAsRead": "ምዕራፍ እንደተነበበ ምልክት ስጥ",
+  "displayName": "የሚታይ ስም",
+  "save": "አቀርብ",
+  "adminUsers": "አስተዳዳሪ - ተጠቃሚዎች",
+  "adminMessages": "አስተዳዳሪ - መልዕክቶች",
+  "adminStats": "አስተዳዳሪ - ቁጥር መረጃ",
+  "totals": "ድምር",
+  "New": "አዲስ",
+  "Full Name": "ሙሉ ስም",
+  "Search": "መፈለጊያ"
+
+}
+
+

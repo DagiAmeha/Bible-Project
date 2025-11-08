@@ -1,0 +1,744 @@
+[
+  {
+    "day": 1,
+    "portion": "Matthew 1–2",
+    "books": [
+      "Matthew"
+    ]
+  },
+  {
+    "day": 2,
+    "portion": "Matthew 3–4",
+    "books": [
+      "Matthew"
+    ]
+  },
+  {
+    "day": 3,
+    "portion": "Matthew 5–6",
+    "books": [
+      "Matthew"
+    ]
+  },
+  {
+    "day": 4,
+    "portion": "Matthew 7–8",
+    "books": [
+      "Matthew"
+    ]
+  },
+  {
+    "day": 5,
+    "portion": "Matthew 9–10",
+    "books": [
+      "Matthew"
+    ]
+  },
+  {
+    "day": 6,
+    "portion": "Matthew 11–12",
+    "books": [
+      "Matthew"
+    ]
+  },
+  {
+    "day": 7,
+    "portion": "Matthew 13–14",
+    "books": [
+      "Matthew"
+    ]
+  },
+  {
+    "day": 8,
+    "portion": "Matthew 15–16",
+    "books": [
+      "Matthew"
+    ]
+  },
+  {
+    "day": 9,
+    "portion": "Matthew 17–18",
+    "books": [
+      "Matthew"
+    ]
+  },
+  {
+    "day": 10,
+    "portion": "Matthew 19–20",
+    "books": [
+      "Matthew"
+    ]
+  },
+  {
+    "day": 11,
+    "portion": "Matthew 21–22",
+    "books": [
+      "Matthew"
+    ]
+  },
+  {
+    "day": 12,
+    "portion": "Matthew 23–24",
+    "books": [
+      "Matthew"
+    ]
+  },
+  {
+    "day": 13,
+    "portion": "Matthew 25–26",
+    "books": [
+      "Matthew"
+    ]
+  },
+  {
+    "day": 14,
+    "portion": "Matthew 27–28",
+    "books": [
+      "Matthew"
+    ]
+  },
+  {
+    "day": 15,
+    "portion": "Luke 1–2",
+    "books": [
+      "Luke"
+    ]
+  },
+  {
+    "day": 16,
+    "portion": "Luke 3–4",
+    "books": [
+      "Luke"
+    ]
+  },
+  {
+    "day": 17,
+    "portion": "Luke 5–6",
+    "books": [
+      "Luke"
+    ]
+  },
+  {
+    "day": 18,
+    "portion": "Luke 7–8",
+    "books": [
+      "Luke"
+    ]
+  },
+  {
+    "day": 19,
+    "portion": "Luke 9–10",
+    "books": [
+      "Luke"
+    ]
+  },
+  {
+    "day": 20,
+    "portion": "Luke 11–12",
+    "books": [
+      "Luke"
+    ]
+  },
+  {
+    "day": 21,
+    "portion": "Luke 13–14",
+    "books": [
+      "Luke"
+    ]
+  },
+  {
+    "day": 22,
+    "portion": "Luke 15–16",
+    "books": [
+      "Luke"
+    ]
+  },
+  {
+    "day": 23,
+    "portion": "Luke 17–18",
+    "books": [
+      "Luke"
+    ]
+  },
+  {
+    "day": 24,
+    "portion": "Luke 19–20",
+    "books": [
+      "Luke"
+    ]
+  },
+  {
+    "day": 25,
+    "portion": "Luke 21–22",
+    "books": [
+      "Luke"
+    ]
+  },
+  {
+    "day": 26,
+    "portion": "Luke 23–24",
+    "books": [
+      "Luke"
+    ]
+  },
+  {
+    "day": 27,
+    "portion": "John 1–2",
+    "books": [
+      "John"
+    ]
+  },
+  {
+    "day": 28,
+    "portion": "John 3–4",
+    "books": [
+      "John"
+    ]
+  },
+  {
+    "day": 29,
+    "portion": "John 5–6",
+    "books": [
+      "John"
+    ]
+  },
+  {
+    "day": 30,
+    "portion": "John 7–8",
+    "books": [
+      "John"
+    ]
+  },
+  {
+    "day": 31,
+    "portion": "John 9–10",
+    "books": [
+      "John"
+    ]
+  },
+  {
+    "day": 32,
+    "portion": "John 11–12",
+    "books": [
+      "John"
+    ]
+  },
+  {
+    "day": 33,
+    "portion": "John 13–14",
+    "books": [
+      "John"
+    ]
+  },
+  {
+    "day": 34,
+    "portion": "John 15–16",
+    "books": [
+      "John"
+    ]
+  },
+  {
+    "day": 35,
+    "portion": "John 17–18",
+    "books": [
+      "John"
+    ]
+  },
+  {
+    "day": 36,
+    "portion": "John 19–20",
+    "books": [
+      "John"
+    ]
+  },
+  {
+    "day": 37,
+    "portion": "John 21",
+    "books": [
+      "John"
+    ]
+  },
+  {
+    "day": 38,
+    "portion": "Acts 1–2",
+    "books": [
+      "Acts"
+    ]
+  },
+  {
+    "day": 39,
+    "portion": "Acts 3–4",
+    "books": [
+      "Acts"
+    ]
+  },
+  {
+    "day": 40,
+    "portion": "Acts 5–6",
+    "books": [
+      "Acts"
+    ]
+  },
+  {
+    "day": 41,
+    "portion": "Acts 7–8",
+    "books": [
+      "Acts"
+    ]
+  },
+  {
+    "day": 42,
+    "portion": "Acts 9–10",
+    "books": [
+      "Acts"
+    ]
+  },
+  {
+    "day": 43,
+    "portion": "Acts 11–12",
+    "books": [
+      "Acts"
+    ]
+  },
+  {
+    "day": 44,
+    "portion": "Acts 13–14",
+    "books": [
+      "Acts"
+    ]
+  },
+  {
+    "day": 45,
+    "portion": "Acts 15–16",
+    "books": [
+      "Acts"
+    ]
+  },
+  {
+    "day": 46,
+    "portion": "Acts 17–18",
+    "books": [
+      "Acts"
+    ]
+  },
+  {
+    "day": 47,
+    "portion": "Acts 19–20",
+    "books": [
+      "Acts"
+    ]
+  },
+  {
+    "day": 48,
+    "portion": "Acts 21–22",
+    "books": [
+      "Acts"
+    ]
+  },
+  {
+    "day": 49,
+    "portion": "Acts 23–24",
+    "books": [
+      "Acts"
+    ]
+  },
+  {
+    "day": 50,
+    "portion": "Acts 25–26",
+    "books": [
+      "Acts"
+    ]
+  },
+  {
+    "day": 51,
+    "portion": "Acts 27–28",
+    "books": [
+      "Acts"
+    ]
+  },
+  {
+    "day": 52,
+    "portion": "Romans 1–2",
+    "books": [
+      "Romans"
+    ]
+  },
+  {
+    "day": 53,
+    "portion": "Romans 3–4",
+    "books": [
+      "Romans"
+    ]
+  },
+  {
+    "day": 54,
+    "portion": "Romans 5–6",
+    "books": [
+      "Romans"
+    ]
+  },
+  {
+    "day": 55,
+    "portion": "Romans 7–8",
+    "books": [
+      "Romans"
+    ]
+  },
+  {
+    "day": 56,
+    "portion": "Romans 9–10",
+    "books": [
+      "Romans"
+    ]
+  },
+  {
+    "day": 57,
+    "portion": "Romans 11–12",
+    "books": [
+      "Romans"
+    ]
+  },
+  {
+    "day": 58,
+    "portion": "Romans 13–14",
+    "books": [
+      "Romans"
+    ]
+  },
+  {
+    "day": 59,
+    "portion": "Romans 15–16",
+    "books": [
+      "Romans"
+    ]
+  },
+  {
+    "day": 60,
+    "portion": "1 Corinthians 1–3",
+    "books": [
+      "1 Corinthians"
+    ]
+  },
+  {
+    "day": 61,
+    "portion": "1 Corinthians 4–6",
+    "books": [
+      "1 Corinthians"
+    ]
+  },
+  {
+    "day": 62,
+    "portion": "1 Corinthians 7–9",
+    "books": [
+      "1 Corinthians"
+    ]
+  },
+  {
+    "day": 63,
+    "portion": "1 Corinthians 10–12",
+    "books": [
+      "1 Corinthians"
+    ]
+  },
+  {
+    "day": 64,
+    "portion": "1 Corinthians 13–16",
+    "books": [
+      "1 Corinthians"
+    ]
+  },
+  {
+    "day": 65,
+    "portion": "2 Corinthians 1–3",
+    "books": [
+      "2 Corinthians"
+    ]
+  },
+  {
+    "day": 66,
+    "portion": "2 Corinthians 4–6",
+    "books": [
+      "2 Corinthians"
+    ]
+  },
+  {
+    "day": 67,
+    "portion": "2 Corinthians 7–9",
+    "books": [
+      "2 Corinthians"
+    ]
+  },
+  {
+    "day": 68,
+    "portion": "2 Corinthians 10–13",
+    "books": [
+      "2 Corinthians"
+    ]
+  },
+  {
+    "day": 69,
+    "portion": "Galatians 1–3",
+    "books": [
+      "Galatians"
+    ]
+  },
+  {
+    "day": 70,
+    "portion": "Galatians 4–6",
+    "books": [
+      "Galatians"
+    ]
+  },
+  {
+    "day": 71,
+    "portion": "Ephesians 1–3",
+    "books": [
+      "Ephesians"
+    ]
+  },
+  {
+    "day": 72,
+    "portion": "Ephesians 4–6",
+    "books": [
+      "Ephesians"
+    ]
+  },
+  {
+    "day": 73,
+    "portion": "Philippians 1–2",
+    "books": [
+      "Philippians"
+    ]
+  },
+  {
+    "day": 74,
+    "portion": "Philippians 3–4",
+    "books": [
+      "Philippians"
+    ]
+  },
+  {
+    "day": 75,
+    "portion": "Colossians 1–2",
+    "books": [
+      "Colossians"
+    ]
+  },
+  {
+    "day": 76,
+    "portion": "Colossians 3–4",
+    "books": [
+      "Colossians"
+    ]
+  },
+  {
+    "day": 77,
+    "portion": "1 Thessalonians 1–3",
+    "books": [
+      "1 Thessalonians"
+    ]
+  },
+  {
+    "day": 78,
+    "portion": "1 Thessalonians 4–5",
+    "books": [
+      "1 Thessalonians"
+    ]
+  },
+  {
+    "day": 79,
+    "portion": "2 Thessalonians 1–3",
+    "books": [
+      "2 Thessalonians"
+    ]
+  },
+  {
+    "day": 80,
+    "portion": "1 Timothy 1–3",
+    "books": [
+      "1 Timothy"
+    ]
+  },
+  {
+    "day": 81,
+    "portion": "1 Timothy 4–6",
+    "books": [
+      "1 Timothy"
+    ]
+  },
+  {
+    "day": 82,
+    "portion": "2 Timothy 1–2",
+    "books": [
+      "2 Timothy"
+    ]
+  },
+  {
+    "day": 83,
+    "portion": "2 Timothy 3–4",
+    "books": [
+      "2 Timothy"
+    ]
+  },
+  {
+    "day": 84,
+    "portion": "Titus 1–3",
+    "books": [
+      "Titus"
+    ]
+  },
+  {
+    "day": 85,
+    "portion": "Philemon 1",
+    "books": [
+      "Philemon"
+    ]
+  },
+  {
+    "day": 86,
+    "portion": "Hebrews 1–3",
+    "books": [
+      "Hebrews"
+    ]
+  },
+  {
+    "day": 87,
+    "portion": "Hebrews 4–6",
+    "books": [
+      "Hebrews"
+    ]
+  },
+  {
+    "day": 88,
+    "portion": "Hebrews 7–9",
+    "books": [
+      "Hebrews"
+    ]
+  },
+  {
+    "day": 89,
+    "portion": "Hebrews 10–13",
+    "books": [
+      "Hebrews"
+    ]
+  },
+  {
+    "day": 90,
+    "portion": "James 1–3",
+    "books": [
+      "James"
+    ]
+  },
+  {
+    "day": 91,
+    "portion": "James 4–5",
+    "books": [
+      "James"
+    ]
+  },
+  {
+    "day": 92,
+    "portion": "1 Peter 1–3",
+    "books": [
+      "1 Peter"
+    ]
+  },
+  {
+    "day": 93,
+    "portion": "1 Peter 4–5",
+    "books": [
+      "1 Peter"
+    ]
+  },
+  {
+    "day": 94,
+    "portion": "2 Peter 1–3",
+    "books": [
+      "2 Peter"
+    ]
+  },
+  {
+    "day": 95,
+    "portion": "1 John 1–3",
+    "books": [
+      "1 John"
+    ]
+  },
+  {
+    "day": 96,
+    "portion": "1 John 4–5",
+    "books": [
+      "1 John"
+    ]
+  },
+  {
+    "day": 97,
+    "portion": "2 John 1",
+    "books": [
+      "2 John"
+    ]
+  },
+  {
+    "day": 98,
+    "portion": "3 John 1",
+    "books": [
+      "3 John"
+    ]
+  },
+  {
+    "day": 99,
+    "portion": "Jude 1",
+    "books": [
+      "Jude"
+    ]
+  },
+  {
+    "day": 100,
+    "portion": "Revelation 1–3",
+    "books": [
+      "Revelation"
+    ]
+  },
+  {
+    "day": 101,
+    "portion": "Revelation 4–6",
+    "books": [
+      "Revelation"
+    ]
+  },
+  {
+    "day": 102,
+    "portion": "Revelation 7–9",
+    "books": [
+      "Revelation"
+    ]
+  },
+  {
+    "day": 103,
+    "portion": "Revelation 10–12",
+    "books": [
+      "Revelation"
+    ]
+  },
+  {
+    "day": 104,
+    "portion": "Revelation 13–15",
+    "books": [
+      "Revelation"
+    ]
+  },
+  {
+    "day": 105,
+    "portion": "Revelation 16–18",
+    "books": [
+      "Revelation"
+    ]
+  },
+  {
+    "day": 106,
+    "portion": "Revelation 19–22",
+    "books": [
+      "Revelation"
+    ]
+  }
+]

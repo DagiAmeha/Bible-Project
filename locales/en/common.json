@@ -1,0 +1,32 @@
+{
+  "appTitle": "Bible Reading Tracker",
+  "landingSubtitle": "Build a daily habit. Track progress, chat, and stay consistent.",
+  "fullName": "Full Name",
+  "welcome": "Welcome",
+  "Login": "Login",
+  "Signup": "Signup",
+  "continue": "Continue",
+  "email": "Email",
+  "password": "Password",
+  "passwordConfirm": "Password Confirm",
+  "dashboard": "Dashboard",
+  "tracker": "Tracker",
+  "chat": "Chat",
+  "profile": "Profile",
+  "navigation": "Navigation",
+  "weeklyProgress": "Weekly Progress",
+  "todaySummary": "Today\u2019s Summary",
+  "selectBook": "Select a book",
+  "markAsRead": "Mark Chapter as Read",
+  "displayName": "Display name",
+  "save": "Save",
+  "adminUsers": "Admin - Users",
+  "adminMessages": "Admin - Messages",
+  "adminStats": "Admin - Stats",
+  "totals": "Totals",
+  "stats": "stats",
+  "users": "users",
+  "messages": "messages"
+}
+
+
