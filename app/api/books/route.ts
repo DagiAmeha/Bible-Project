@@ -1,6 +1,5 @@
 import { connectDB } from "@/lib/mongodb";
 import Book from "@/models/Book";
-import bcrypt from "bcrypt";
 
 export async function GET(req: Request) {
   try {
