@@ -10,14 +10,15 @@ export interface DailyProgress {
   markedAt: string;         // ISO date string when the day was marked
 }
 
-export async function POST(req: Request) {
+export async function POST( req: Request) {
   try {
+   
     const session = await getServerSession(authOptions);
     if (!session?.user) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
-    const { day, planId } = await req.json();
+    const { day, planId} = await req.json();
     await connectDB();
 
     // Find the progress record for this user and plan

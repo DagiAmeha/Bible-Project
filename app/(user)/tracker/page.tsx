@@ -1,7 +1,6 @@
 "use client";
 import { Sidebar } from '@/components/Sidebar';
 import { BookList } from '@/components/BookList';
-import { Button } from '@/components/Button';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
@@ -28,7 +27,6 @@ export default function TrackerPage() {
           <div className="border rounded-md p-4 grid gap-4">
             <div className="flex items-center justify-between">
               <div className="font-medium">{t('selectBook')}</div>
-              <Button onClick={() => console.log('markChapter', { chapter: 1 })}>{t('markAsRead')}</Button>
             </div>
             <BookList books={books} />
           </div>

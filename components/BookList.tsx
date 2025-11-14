@@ -17,13 +17,13 @@ type BookListProps = {
 export function BookList({books}: BookListProps) {
   const router = useRouter();
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+    <div className="grid grid-cols-2  sm:grid-cols-3 md:grid-cols-4 gap-2">
       {books.map((book) => (
         <Button
           key={book.name}
           variant="outline"
           onClick={() => router.push(`/tracker/${book.name}`)}
-          className="justify-start"
+          className="justify-start dark:bg-gray-800 dark:border-gray-700 dark:hover:shadow-gray-700/40"
         >
           {book.name}
         </Button>

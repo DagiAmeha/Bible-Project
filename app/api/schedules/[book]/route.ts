@@ -10,7 +10,7 @@ export async function GET(req: Request, { params }:{params:  Promise<{book: stri
   try{
     await connectDB();
 
-    const schedules = await Schedule.find({ books: { $in: [book] } });
+    const schedules = await Schedule.find({ books: { $in: [book] } }).sort({ day: 1 });
     console.log(schedules)
     return NextResponse.json({status: 'success', schedules: schedules});
   }catch(error){
