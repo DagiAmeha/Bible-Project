@@ -22,10 +22,29 @@
   "adminMessages": "አስተዳዳሪ - መልዕክቶች",
   "adminStats": "አስተዳዳሪ - ቁጥር መረጃ",
   "totals": "ድምር",
-  "New": "አዲስ",
+  "new": "አዲስ",
   "Full Name": "ሙሉ ስም",
-  "Search": "መፈለጊያ"
-
+  "search": "መፈለጊያ",
+  "not selected": "ምንም ጭውውት አልመረጡም",
+  "plans": "እቅዶች",
+  "createPlan": "እቅድ ፍጠር",
+  "id": "መታወቂያ",
+  "title": "ርዕስ",
+  "duration": "ጊዜ ቆይታ",
+  "started": "ተጀምሯል",
+  "actions": "ተግባሮች",
+  "managePlans": "እቅዶችን አስተዳድር",
+  "adminDashboard": "የአስተዳዳሪ ዳሽቦርድ",
+  "overview": "እይታ እና መጠን መረጃ",
+  "totalUsers": "አጠቃላይ ተጠቃሚዎች",
+  "activeToday": "ዛሬ የተገኙ ተጠቃሚዎች",
+  "totalPlans": "አጠቃላይ እቅዶች",
+  "userPlansStarted": "የተጠቃሚዎች የተጀመሩ እቅዶች",
+  "plansCompleted": "የተጠናቀቁ እቅዶች",
+  "unreadSupportMessages": "ያልተነበቡ የድጋፍ መልዕክቶች",
+  "name": "ስም",
+  "role": "ሚና",
+  "lastSeen": "የመጨረሻ ጊዜ",
+  "created": "የተፈጠረ",
+  "completed": "የተጠናቀቀ"
 }
-
-

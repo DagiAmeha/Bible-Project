@@ -1,33 +1,36 @@
-'use client'
+"use client";
 
-import { UserNavbar } from '@/components/UserNavbar';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { UserNavbar } from "@/components/UserNavbar";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function UserLayout({
-    children,
-  }: {
-    children: React.ReactNode
-  }) {
-    const { data: session, status } = useSession();
-    const router = useRouter();
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const { data: session, status } = useSession();
+  const router = useRouter();
 
-    useEffect(() => {
-      if (status === 'unauthenticated' && !session) {
-        router.push("/login");
-      }
-    }, [session, status, router]);
-
-    if (status === 'loading') {
-      return <section>Loading...</section>;
+  useEffect(() => {
+    if (status === "unauthenticated" && !session) {
+      router.push("/login");
     }
+  }, [session, status, router]);
 
-    if (!session) {
-      return null; // Will redirect via useEffect
-    }
-
-    return <section>
-      <UserNavbar/>
-      {children}</section>
+  if (status === "loading") {
+    return <section>Loading...</section>;
   }
+
+  if (!session) {
+    return null; // Will redirect via useEffect
+  }
+
+  return (
+    <section>
+      <UserNavbar />
+      {children}
+    </section>
+  );
+}

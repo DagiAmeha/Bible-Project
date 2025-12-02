@@ -1,3 +1,4 @@
+import { Check, CheckCheck } from "lucide-react";
 import { cn } from "./utils";
 
 export type ChatMessage = {
@@ -21,8 +22,22 @@ type MessageBubbleProps = {
 export function MessageBubble({ message, currentUserId }: MessageBubbleProps) {
   const isCurrentUser = message.senderId === currentUserId;
 
+  const renderStatusIcon = () => {
+    if (!isCurrentUser) return null; // Only show status for sender
+
+    switch (message.status) {
+      case "sent":
+        return <Check className="w-4 h-4 text-gray-400" />;
+      case "read":
+        return <CheckCheck className="w-4 h-4 text-blue-500" />;
+      default:
+        return null;
+    }
+  };
   return (
-    <div className={cn("flex", isCurrentUser ? "justify-end" : "justify-start")}>
+    <div
+      className={cn("flex", isCurrentUser ? "justify-end" : "justify-start")}
+    >
       <div
         className={cn(
           "max-w-[80%] rounded-lg px-3 py-2 text-sm shadow",
@@ -47,10 +62,9 @@ export function MessageBubble({ message, currentUserId }: MessageBubbleProps) {
           )}
         >
           {new Date(message.createdAt).toLocaleTimeString()}
+          {renderStatusIcon()}
         </div>
       </div>
     </div>
   );
 }
-
-

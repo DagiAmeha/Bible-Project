@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 
 export async function POST(req: Request) {
   try {
-    const { name, email, password } = await req.json();
+    const { fullName, email, password } = await req.json();
     await connectDB();
 
     const existing = await User.findOne({ email });
@@ -13,10 +13,15 @@ export async function POST(req: Request) {
     }
 
     const hashed = await bcrypt.hash(password, 10);
-    const newUser = await User.create({ name, email, password: hashed });
+    const newUser = await User.create({
+      name: fullName,
+      email,
+      password: hashed,
+    });
 
     return Response.json({ message: "User created", user: newUser });
   } catch (error) {
+    console.log(error);
     return Response.json({ message: "Error creating user" }, { status: 500 });
   }
 }

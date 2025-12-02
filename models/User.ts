@@ -5,7 +5,8 @@ const userSchema = new mongoose.Schema({
   email: { type: String, unique: true, required: true },
   password: { type: String }, // hashed password for credentials login
   provider: { type: String, default: "credentials" }, // e.g., "google" or "credentials"
-  role: { type: String, default: "user" }, // "user" or "admin"
+  role: { type: String, default: "user" },
+  lastSeen: { type: Date },
   createdAt: { type: Date, default: Date.now },
 });
 

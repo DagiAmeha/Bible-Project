@@ -84,16 +84,20 @@ export function ChatBox() {
   useEffect(() => {
     if (!chatId || !session?.user?.id) return;
 
-    const socket = io({
+    const socket = io("http://localhost:3000", {
       path: "/api/socket",
+      query: {
+        userId: session.user.id,
+      },
     });
 
     socketRef.current = socket;
-    
+
     // Notify server that user is online
     socket.on("connect", () => {
       socket.emit("user_online", session.user.id);
       socket.emit("join_chat", chatId);
+      socket.emit("mark_read", chatId, session.user.id, "user");
     });
 
     const handleNewMessage = (message: ChatMessage) => {
@@ -102,13 +106,20 @@ export function ChatBox() {
       }
     };
 
-    const handleUserTyping = (data: { chatId: string; userId: string; isTyping: boolean }) => {
+    const handleUserTyping = (data: {
+      chatId: string;
+      userId: string;
+      isTyping: boolean;
+    }) => {
       if (data.chatId === chatId && data.userId === adminId) {
         setIsAdminTyping(data.isTyping);
       }
     };
 
-    const handleUserStatus = (data: { userId: string; status: "online" | "offline" }) => {
+    const handleUserStatus = (data: {
+      userId: string;
+      status: "online" | "offline";
+    }) => {
       if (data.userId === adminId) {
         setIsAdminOnline(data.status === "online");
       }
@@ -215,13 +226,17 @@ export function ChatBox() {
       {/* Header with online status */}
       <div className="px-4 py-2 border-b flex items-center gap-2">
         <div className="flex items-center gap-2">
-          <div className={`h-2 w-2 rounded-full ${isAdminOnline ? 'bg-green-500' : 'bg-gray-400'}`} />
+          <div
+            className={`h-2 w-2 rounded-full ${
+              isAdminOnline ? "bg-green-500" : "bg-gray-400"
+            }`}
+          />
           <span className="text-sm text-muted-foreground">
             {isAdminOnline ? "Admin is online" : "Admin is offline"}
           </span>
         </div>
       </div>
-      
+
       <div className="flex-1 p-3 space-y-3 overflow-y-auto">
         {messages.map((m) => (
           <MessageBubble
@@ -236,9 +251,24 @@ export function ChatBox() {
               <span className="inline-flex items-center gap-1">
                 Admin is typing
                 <span className="inline-flex gap-1">
-                  <span className="animate-bounce" style={{ animationDelay: '0ms' }}>.</span>
-                  <span className="animate-bounce" style={{ animationDelay: '150ms' }}>.</span>
-                  <span className="animate-bounce" style={{ animationDelay: '300ms' }}>.</span>
+                  <span
+                    className="animate-bounce"
+                    style={{ animationDelay: "0ms" }}
+                  >
+                    .
+                  </span>
+                  <span
+                    className="animate-bounce"
+                    style={{ animationDelay: "150ms" }}
+                  >
+                    .
+                  </span>
+                  <span
+                    className="animate-bounce"
+                    style={{ animationDelay: "300ms" }}
+                  >
+                    .
+                  </span>
                 </span>
               </span>
             </div>
@@ -260,22 +290,22 @@ export function ChatBox() {
           value={text}
           onChange={(e) => {
             setText(e.target.value);
-            
+
             // Handle typing indicators
             if (!socketRef.current || !chatId || !session?.user?.id) return;
-            
+
             // Clear existing timeout
             if (typingTimeoutRef.current) {
               clearTimeout(typingTimeoutRef.current);
             }
-            
+
             // Send typing start if there's text
             if (e.target.value.trim()) {
               socketRef.current.emit("typing_start", {
                 chatId,
                 userId: session.user.id,
               });
-              
+
               // Auto-stop typing after 3 seconds of inactivity
               typingTimeoutRef.current = setTimeout(() => {
                 if (socketRef.current) {
@@ -316,4 +346,3 @@ export function ChatBox() {
     </div>
   );
 }
-

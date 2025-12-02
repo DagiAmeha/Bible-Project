@@ -16,11 +16,13 @@ type ChatSummary = {
     _id: string;
     name: string;
     email: string;
+    lastSeen: Date;
   };
   lastMessage: string;
   lastMessageType: string;
   status: string;
   updatedAt: string;
+  unreadCount?: number;
 };
 
 type ChatsResponse = {
@@ -59,7 +61,9 @@ export default function AdminMessagesPage() {
   const [loadingMessages, setLoadingMessages] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [onlineUsers, setOnlineUsers] = useState<Set<string>>(new Set());
-  const [typingUsers, setTypingUsers] = useState<Map<string, boolean>>(new Map());
+  const [typingUsers, setTypingUsers] = useState<Map<string, boolean>>(
+    new Map()
+  );
 
   const socketRef = useRef<Socket | null>(null);
   const selectedChatRef = useRef<string | null>(null);
@@ -75,8 +79,9 @@ export default function AdminMessagesPage() {
         throw new Error(body.message || "Unable to load chats");
       }
       const data: ChatsResponse = await res.json();
+      console.log(data);
       setChats(data.chats);
-      setSelectedId((prev) => prev ?? data.chats[0]?._id ?? null);
+      setSelectedId((prev) => prev ?? null);
       setError(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load chats");
@@ -131,7 +136,12 @@ export default function AdminMessagesPage() {
   useEffect(() => {
     if (status !== "authenticated" || session?.user?.role !== "admin") return;
 
-    const socket = io({ path: "/api/socket" });
+    const socket = io("http://localhost:3000", {
+      path: "/api/socket",
+      query: {
+        userId: session.user.id,
+      },
+    });
     socketRef.current = socket;
 
     // Notify server that admin is online
@@ -148,26 +158,43 @@ export default function AdminMessagesPage() {
           void loadChats();
           return prev;
         }
+        const isCurrentChatOpen = selectedChatRef.current === message.chatId;
+
         return prev
           .map((chat) =>
             chat._id === message.chatId
               ? {
                   ...chat,
-                  lastMessage: message.type === "text" ? message.content || "" : "[Voice message]",
+                  lastMessage:
+                    message.type === "text"
+                      ? message.content || ""
+                      : "[Voice message]",
                   lastMessageType: message.type,
                   updatedAt: message.createdAt,
+                  unreadCount: isCurrentChatOpen
+                    ? 0
+                    : (chat.unreadCount ?? 0) + 1,
                 }
               : chat
           )
-          .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
+          .sort(
+            (a, b) =>
+              new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+          );
       });
 
       if (selectedChatRef.current === message.chatId) {
         setMessages((prev) => [...prev, message]);
       }
+
+      // socket.emit("mark_read", selectedId, message._id, "admin");
     };
 
-    const handleUserTyping = (data: { chatId: string; userId: string; isTyping: boolean }) => {
+    const handleUserTyping = (data: {
+      chatId: string;
+      userId: string;
+      isTyping: boolean;
+    }) => {
       if (data.chatId === selectedChatRef.current) {
         setTypingUsers((prev) => {
           const next = new Map(prev);
@@ -181,8 +208,12 @@ export default function AdminMessagesPage() {
       }
     };
 
-    const handleUserStatus = (data: { userId: string; status: "online" | "offline" }) => {
+    const handleUserStatus = (data: {
+      userId: string;
+      status: "online" | "offline";
+    }) => {
       setOnlineUsers((prev) => {
+        console.log(data);
         const next = new Set(prev);
         if (data.status === "online") {
           next.add(data.userId);
@@ -194,6 +225,16 @@ export default function AdminMessagesPage() {
     };
 
     socket.on("new_message", handleNewMessage);
+    socket.on("messages_read", ({ chatId, userId, res }) => {
+      // If admin is the one who just marked read, you already set local unreadCount to 0.
+      // But if the other side (user) marked read and you need to clear (rare), handle it:
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg.senderId === res.senderId ? { ...msg, status: "read" } : msg
+        )
+      );
+    });
+
     socket.on("user_typing", handleUserTyping);
     socket.on("user_status", handleUserStatus);
     socket.on("connect_error", (err: Error) => {
@@ -240,7 +281,7 @@ export default function AdminMessagesPage() {
     ) {
       return;
     }
-
+    console.log("______FUNCTIONI CALLED CORRECTLY______");
     // Stop typing indicator
     if (typingTimeoutRef.current) {
       clearTimeout(typingTimeoutRef.current);
@@ -278,215 +319,193 @@ export default function AdminMessagesPage() {
     };
   }, []);
 
+  // const chatSelect = () => {
+  //   setSelectedId(item._id);
+  //   setChats((prev) =>
+  //     prev.map((c) => (c._id === item._id ? { ...c, unreadCount: 0 } : c))
+  //   );
+  //   socketRef.current.emit("uncount_reset", item._id);
+  // };
   return (
-    <div className="min-h-screen flex flex-col">
-      <main className="container mx-auto px-4 py-6 flex gap-4">
-        <aside className="w-full md:w-80 lg:w-96 shrink-0 border rounded-md overflow-hidden">
+    <div className="h-screen flex flex-col">
+      <main className="flex flex-1 overflow-hidden">
+        {/* ---------- SIDEBAR ---------- */}
+        <aside className="w-80 md:w-96 border-r flex flex-col">
           <div className="p-3 border-b flex items-center gap-2">
             <Input
-              placeholder={t("Search")}
+              placeholder={t("search")}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
             <Button variant="outline" disabled>
-              {t("New")}
+              {t("new")}
             </Button>
           </div>
-          {loadingChats ? (
-            <div className="py-6 text-center text-sm text-muted-foreground">
-              Loading conversations...
-            </div>
-          ) : (
-            <ul className="divide-y max-h-[calc(100vh-200px)] overflow-auto">
-              {filteredChats.map((item) => (
-                <li key={item._id}>
-                  <button
-                    className={`w-full flex items-center gap-3 px-3 py-3 text-left hover:bg-muted ${
-                      item._id === selectedId ? "bg-muted" : ""
-                    }`}
-                    onClick={() => setSelectedId(item._id)}
-                  >
-                    <div className="relative">
-                      <InitialAvatar name={item.user.name} />
-                      {onlineUsers.has(item.user._id) && (
-                        <div className="absolute bottom-0 right-0 h-3 w-3 bg-green-500 border-2 border-white dark:border-gray-800 rounded-full" />
-                      )}
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center justify-between gap-2">
-                        <div className="flex items-center gap-2">
-                          <div className="font-medium truncate">{item.user.name}</div>
-                          {onlineUsers.has(item.user._id) && (
-                            <span className="text-[10px] text-green-600 dark:text-green-400">Online</span>
+
+          <div className="flex-1 overflow-y-auto">
+            {loadingChats ? (
+              <div className="p-4 text-center text-sm text-muted-foreground">
+                Loading...
+              </div>
+            ) : (
+              <ul className="divide-y">
+                {filteredChats.map((item) => (
+                  <li key={item._id}>
+                    <button
+                      className={`w-full p-3 flex items-center gap-3 text-left hover:bg-muted ${
+                        item._id === selectedId ? "bg-muted" : ""
+                      }`}
+                      onClick={() => {
+                        setSelectedId(item._id);
+                        setChats((prev) =>
+                          prev.map((c) =>
+                            c._id === item._id ? { ...c, unreadCount: 0 } : c
+                          )
+                        );
+                        socketRef.current?.emit("unread_reset", item._id);
+                        socketRef.current?.emit(
+                          "mark_read",
+                          item._id,
+                          item.user._id,
+                          "admin"
+                        );
+                        console.log("called");
+                      }}
+                    >
+                      <div className="relative">
+                        <InitialAvatar name={item.user.name} />
+
+                        {onlineUsers.has(item.user._id) && (
+                          <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full bg-green-500 border-2 border-white"></span>
+                        )}
+                      </div>
+
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between">
+                          <span className="font-medium truncate">
+                            {item.user.name}
+                          </span>
+                          <span className="text-xs text-muted-foreground">
+                            {new Date(item.updatedAt).toLocaleDateString()}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between gap-3">
+                          <div className="text-sm truncate text-muted-foreground flex-1">
+                            {item.lastMessage || "No messages"}
+                          </div>
+                          {item.unreadCount! > 0 && (
+                            <div className="min-w-[24px] h-6 px-2 flex items-center justify-center rounded-full bg-blue-600 text-white text-xs font-medium">
+                              {item.unreadCount}
+                            </div>
                           )}
                         </div>
-                        <div className="text-[11px] text-muted-foreground">
-                          {new Date(item.updatedAt).toLocaleDateString()}
-                        </div>
                       </div>
-                      <div className="text-sm text-muted-foreground truncate">
-                        {item.lastMessage || "No messages yet"}
-                      </div>
-                    </div>
-                  </button>
-                </li>
-              ))}
-              {!filteredChats.length && (
-                <li className="px-4 py-6 text-center text-sm text-muted-foreground">
-                  No conversations found.
-                </li>
-              )}
-            </ul>
-          )}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </aside>
 
-        <section className="flex-1 border rounded-md min-h-[600px] grid grid-rows-[auto_1fr_auto]">
-          <div className="px-4 py-3 border-b flex items-center gap-3">
+        {/* ---------- CHAT SECTION ---------- */}
+        <section className="flex flex-col flex-1">
+          {/* Header */}
+          <div className="p-3 border-b">
             {selectedChat ? (
-              <>
-                <div className="relative">
-                  <InitialAvatar name={selectedChat.user.name} />
-                  {onlineUsers.has(selectedChat.user._id) && (
-                    <div className="absolute bottom-0 right-0 h-3 w-3 bg-green-500 border-2 border-white dark:border-gray-800 rounded-full" />
-                  )}
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <div className="font-medium">{selectedChat.user.name}</div>
-                    {onlineUsers.has(selectedChat.user._id) ? (
-                      <span className="text-xs text-green-600 dark:text-green-400">Online</span>
-                    ) : (
-                      <span className="text-xs text-muted-foreground">Offline</span>
-                    )}
-                  </div>
+              <div className="flex items-center gap-3">
+                <InitialAvatar name={selectedChat.user.name} />
+                <div>
+                  <div className="font-medium">{selectedChat.user.name}</div>
                   <div className="text-xs text-muted-foreground">
-                    {typingUsers.has(selectedChat.user._id) && typingUsers.get(selectedChat.user._id) ? (
-                      <span className="inline-flex items-center gap-1">
-                        <span>typing</span>
+                    {typingUsers.get(selectedChat.user._id) ? (
+                      <span className="text-blue-500">
+                        typing
                         <span className="inline-flex gap-1">
-                          <span className="animate-bounce" style={{ animationDelay: '0ms' }}>.</span>
-                          <span className="animate-bounce" style={{ animationDelay: '150ms' }}>.</span>
-                          <span className="animate-bounce" style={{ animationDelay: '300ms' }}>.</span>
+                          <span
+                            className="animate-bounce"
+                            style={{ animationDelay: "0ms" }}
+                          >
+                            .
+                          </span>
+                          <span
+                            className="animate-bounce"
+                            style={{ animationDelay: "150ms" }}
+                          >
+                            .
+                          </span>
+                          <span
+                            className="animate-bounce"
+                            style={{ animationDelay: "300ms" }}
+                          >
+                            .
+                          </span>
                         </span>
                       </span>
+                    ) : onlineUsers.has(selectedChat.user._id) ? (
+                      <span className="text-green-600 font-medium">Online</span>
                     ) : (
-                      `Last active ${new Date(selectedChat.updatedAt).toLocaleString()}`
+                      <span className="text-muted-foreground">
+                        last seen{" "}
+                        {new Date(selectedChat.user.lastSeen).toLocaleString()}
+                      </span>
                     )}
                   </div>
                 </div>
-              </>
+              </div>
             ) : (
               <div className="text-sm text-muted-foreground">
                 Select a conversation
               </div>
             )}
           </div>
-          <div className="p-3 overflow-auto space-y-3">
-            {error && (
-              <div className="text-sm text-red-500 bg-red-50 border border-red-100 rounded px-3 py-2">
-                {error}
-              </div>
-            )}
-            {loadingMessages ? (
-              <div className="text-sm text-muted-foreground">Loading messages...</div>
-            ) : selectedChat ? (
-              <>
-                {messages.length ? (
-                  messages.map((msg) => (
-                    <MessageBubble
-                      key={msg._id || `${msg.chatId}-${msg.createdAt}`}
-                      message={msg}
-                      currentUserId={session?.user?.id ?? ""}
-                    />
-                  ))
-                ) : (
-                  <div className="text-sm text-muted-foreground">
-                    No messages yet. Start the conversation below.
-                  </div>
-                )}
-                {/* {selectedChat && typingUsers.has(selectedChat.user._id) && typingUsers.get(selectedChat.user._id) && (
-                  <div className="flex justify-start">
-                    <div className="bg-muted rounded-lg px-3 py-2 text-sm text-muted-foreground">
-                      <span className="inline-flex items-center gap-1">
-                        {selectedChat.user.name} is typing
-                        <span className="inline-flex gap-1">
-                          <span className="animate-bounce" style={{ animationDelay: '0ms' }}>.</span>
-                          <span className="animate-bounce" style={{ animationDelay: '150ms' }}>.</span>
-                          <span className="animate-bounce" style={{ animationDelay: '300ms' }}>.</span>
-                        </span>
-                      </span>
-                    </div>
-                  </div>
-                )} */}
-                <div ref={endRef} />
-              </>
+
+          {/* Messages List */}
+          <div className="flex-1 overflow-y-auto p-3 space-y-3">
+            {selectedChat ? (
+              loadingMessages ? (
+                <div className="text-sm text-muted-foreground">
+                  Loading messages...
+                </div>
+              ) : messages.length ? (
+                messages.map((msg) => (
+                  <MessageBubble
+                    key={msg._id}
+                    message={msg}
+                    currentUserId={session?.user?.id ?? ""}
+                  />
+                ))
+              ) : (
+                <div className="text-sm text-muted-foreground">
+                  No messages yet
+                </div>
+              )
             ) : (
               <div className="text-sm text-muted-foreground">
-                No conversation selected.
+                {t("not selected")}
               </div>
             )}
+
+            <div ref={endRef} />
           </div>
+
+          {/* Input Box */}
           <div className="border-t p-2 flex gap-2">
             <Input
               placeholder={
                 selectedChat
                   ? `Message ${selectedChat.user.name}`
-                  : "Select a conversation to start chatting"
+                  : "Select a chat"
               }
-              value={messageText}
-              onChange={(e) => {
-                setMessageText(e.target.value);
-                
-                // Handle typing indicators
-                if (!socketRef.current || !selectedChat || !session?.user?.id) return;
-                
-                // Clear existing timeout
-                if (typingTimeoutRef.current) {
-                  clearTimeout(typingTimeoutRef.current);
-                }
-                
-                // Send typing start if there's text
-                if (e.target.value.trim()) {
-                  socketRef.current.emit("typing_start", {
-                    chatId: selectedChat._id,
-                    userId: session.user.id,
-                  });
-                  
-                  // Auto-stop typing after 3 seconds of inactivity
-                  typingTimeoutRef.current = setTimeout(() => {
-                    if (socketRef.current) {
-                      socketRef.current.emit("typing_stop", {
-                        chatId: selectedChat._id,
-                        userId: session.user.id,
-                      });
-                    }
-                  }, 3000);
-                } else {
-                  // Stop typing if input is empty
-                  socketRef.current.emit("typing_stop", {
-                    chatId: selectedChat._id,
-                    userId: session.user.id,
-                  });
-                }
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  // Stop typing when sending
-                  if (typingTimeoutRef.current) {
-                    clearTimeout(typingTimeoutRef.current);
-                  }
-                  if (socketRef.current && selectedChat && session?.user?.id) {
-                    socketRef.current.emit("typing_stop", {
-                      chatId: selectedChat._id,
-                      userId: session.user.id,
-                    });
-                  }
-                  sendMessage();
-                }
-              }}
               disabled={!selectedChat}
+              value={messageText}
+              onChange={(e) => setMessageText(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && sendMessage()}
             />
-            <Button onClick={sendMessage} disabled={!selectedChat || !messageText.trim()}>
+            <Button
+              disabled={!selectedChat || !messageText.trim()}
+              onClick={sendMessage}
+            >
               Send
             </Button>
           </div>
@@ -495,4 +514,3 @@ export default function AdminMessagesPage() {
     </div>
   );
 }
-
