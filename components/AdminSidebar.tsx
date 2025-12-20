@@ -3,19 +3,19 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "./utils";
 import { useTranslations } from "next-intl";
-import { BarChart3, Calendar, MessageCircle, User } from "lucide-react";
+import { BarChart3, Users, ClipboardList, MessageCircle } from "lucide-react";
 
-export function Sidebar() {
+export function AdminSidebar() {
   const pathname = usePathname();
   const t = useTranslations("common");
   const items = [
-    { href: "/dashboard", label: t("dashboard"), icon: BarChart3 },
-    { href: "/plans/my", label: t("plans"), icon: Calendar },
-    { href: "/chat", label: t("chat"), icon: MessageCircle },
-    { href: "/profile", label: t("profile"), icon: User },
+    { href: "/admin/dashboard", label: "Dashboard", icon: BarChart3 },
+    { href: "/admin/users", label: "Users", icon: Users },
+    { href: "/admin/plans", label: "Plans", icon: ClipboardList },
+    { href: "/admin/messages", label: "Messages", icon: MessageCircle },
   ];
   return (
-    <aside className="w-64 py-4 bg-white border-r shadow-sm">
+    <aside className="w-64 bg-white border-r shadow-sm">
       <nav className="px-4 space-y-2">
         {items.map((item) => {
           const Icon = item.icon;
@@ -24,9 +24,9 @@ export function Sidebar() {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center gap-3 pl-4 px-2 py-2 text-sm font-medium  hover:border-l-4 hover:border-blue-700 transition-all duration-200 ",
+                "flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors",
                 pathname === item.href
-                  ? " text-blue-700 border-l-4 border-blue-700"
+                  ? "bg-blue-50 text-blue-700 border-r-2 border-blue-700"
                   : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
               )}
             >

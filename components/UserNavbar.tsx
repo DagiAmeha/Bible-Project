@@ -11,23 +11,11 @@ export function UserNavbar() {
   const t = useTranslations("common");
   return (
     <header className="border-b">
-      <div className="container mx-auto px-4 h-14 flex items-center justify-between">
-        <Link href="/dashboard" className="font-semibold">
+      <div className="container mx-auto px-8 h-14 flex items-center justify-between">
+        <Link href="/dashboard" className="text-lg  font-bold">
           {t("appTitle")}
         </Link>
         <nav className="flex items-center gap-4 text-sm">
-          <Link href="/dashboard" className="hover:underline">
-            {t("dashboard")}
-          </Link>
-          <Link href="/plans" className="hover:underline">
-            {t("plans")}
-          </Link>
-          <Link href="/chat" className="hover:underline">
-            {t("chat")}
-          </Link>
-          <Link href="/profile" className="hover:underline">
-            {t("profile")}
-          </Link>
           <LanguageSwitcher />
           <ThemeToggle />
           {session && <Logout />}

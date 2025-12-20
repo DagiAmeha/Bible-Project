@@ -67,6 +67,7 @@ export default function MyPlansPage() {
                 title={p.planId.title}
                 description={p.planId.description}
                 duration={p.planId.durationDays}
+                progress={p.progress}
               />
             ))}
           </div>

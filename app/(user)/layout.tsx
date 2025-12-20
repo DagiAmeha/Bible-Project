@@ -1,5 +1,6 @@
 "use client";
 
+import { DashboardLayout } from "@/components/DashboardLayout";
 import { UserNavbar } from "@/components/UserNavbar";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -30,7 +31,7 @@ export default function UserLayout({
   return (
     <section>
       <UserNavbar />
-      {children}
+      <DashboardLayout>{children}</DashboardLayout>
     </section>
   );
 }

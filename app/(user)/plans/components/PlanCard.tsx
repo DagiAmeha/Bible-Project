@@ -9,10 +9,11 @@ interface Props {
   started?: boolean; // add this flag
 }
 
-const startPlan = async (id: string) => {
+const startPlan = async (id: string, duration: number) => {
   try {
     const response = await fetch(`/api/plans/${id}/start`, {
       method: "POST",
+      body: JSON.stringify({ duration }),
       headers: {
         "Content-Type": "application/json",
       },
@@ -55,13 +56,15 @@ export default function PlanCard({
             <div
               className="bg-blue-600 h-full rounded-full"
               style={{ width: `${progress}%` }}
-            ></div>
+            >
+              {Math.round((progress / duration) * 100)}%
+            </div>
           </div>
         )}
       </div>
 
       {/* ACTION BUTTON */}
-      <div className="mt-4">
+      <div className="flex mt-4">
         {started ? (
           /* Already started → Show gray disabled button */
           <button
@@ -73,7 +76,7 @@ export default function PlanCard({
         ) : (
           /* Not started → Show start button */
           <button
-            onClick={() => startPlan(id)}
+            onClick={() => startPlan(id, duration)}
             className="w-full block text-center py-2 text-sm rounded-md bg-blue-600 hover:bg-blue-700 text-white transition"
           >
             Start Plan

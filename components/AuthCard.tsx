@@ -44,7 +44,11 @@ export function AuthCard({ mode }: { mode: "login" | "signup" }) {
     setLoading(true);
     setError("");
 
-    if (!email || !password || (mode === "signup" && (!fullName || !confirmPassword))) {
+    if (
+      !email ||
+      !password ||
+      (mode === "signup" && (!fullName || !confirmPassword))
+    ) {
       setLoading(false);
       return showError("Please fill all required fields!");
     }
@@ -71,7 +75,7 @@ export function AuthCard({ mode }: { mode: "login" | "signup" }) {
           password,
           redirect: false,
         });
-        
+
         if (res?.ok) {
           // Trigger session update to get the latest session with role
           await update();
@@ -104,109 +108,113 @@ export function AuthCard({ mode }: { mode: "login" | "signup" }) {
   };
 
   return (
-    <div className="w-full max-w-md rounded-lg border bg-white p-6 shadow-sm dark:bg-neutral-900 relative">
-      <h2 className="text-xl font-semibold mb-4">
-        {mode === "login" ? t("Login") : t("Signup")}
-      </h2>
+    <div className="w-full max-w-md bg-white rounded-lg border shadow-lg p-8">
+      <div className="text-center mb-8">
+        <h2 className="text-2xl font-bold text-gray-900">
+          {mode === "login" ? t("Login") : t("Signup")}
+        </h2>
+        <p className="text-gray-600 mt-2">
+          {mode === "login"
+            ? "Welcome back! Please sign in to your account."
+            : "Create your account to get started."}
+        </p>
+      </div>
 
       {error && (
-        <div className="mb-3 p-2 text-sm text-red-600 bg-red-50 border border-red-200 rounded">
+        <div className="mb-6 p-4 text-sm text-red-700 bg-red-50 border border-red-200 rounded-lg">
           {error}
         </div>
       )}
 
-      <form className="space-y-3" onSubmit={onSubmit}>
+      <form className="space-y-6" onSubmit={onSubmit}>
         {mode === "signup" && (
           <div>
-            <label className="block text-sm mb-1">{t("fullName")}</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              {t("fullName")}
+            </label>
             <Input
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               placeholder="John Doe"
+              className="w-full"
             />
           </div>
         )}
         <div>
-          <label className="block text-sm mb-1">{t("email")}</label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            {t("email")}
+          </label>
           <Input
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@example.com"
+            type="email"
+            className="w-full"
           />
         </div>
         <div>
-          <label className="block text-sm mb-1">{t("password")}</label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            {t("password")}
+          </label>
           <Input
             placeholder="******"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            className="w-full"
           />
         </div>
         {mode === "signup" && (
           <div>
-            <label className="block text-sm mb-1">{t("passwordConfirm")}</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              {t("passwordConfirm")}
+            </label>
             <Input
               placeholder="******"
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
+              className="w-full"
             />
           </div>
         )}
         <Button type="submit" className="w-full" disabled={loading}>
-          {loading ? (
-            <svg
-              className="animate-spin h-5 w-5 text-white mx-auto"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-              ></circle>
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-              ></path>
-            </svg>
-          ) : (
-            t("continue")
-          )}
+          {loading ? "Loading..." : t("continue")}
         </Button>
       </form>
 
-      <div className="flex items-center justify-center my-4">
-        <span className="text-gray-500 text-sm">OR</span>
+      <div className="mt-6">
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-gray-300" />
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-2 bg-white text-gray-500">
+              Or continue with
+            </span>
+          </div>
+        </div>
+
+        <button
+          onClick={async () => {
+            await signIn("google");
+          }}
+          className="mt-4 w-full flex items-center justify-center px-4 py-2 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors"
+        >
+          <img src="/imgs/google.png" alt="Google" className="w-5 h-5 mr-3" />
+          Continue with Google
+        </button>
       </div>
 
-      <button
-        onClick={async () => {
-          // For Google OAuth, we need to allow redirect
-          // The LoginPage will handle role-based redirect after Google auth completes
-          await signIn("google");
-        }}
-        className="flex items-center justify-center border py-2 rounded hover:bg-gray-100 w-full"
-      >
-        <img src="/imgs/google.png" alt="Google" className="w-7 h-7 mr-2" />
-        Continue with Google
-      </button>
-
-      <p className="text-sm text-center mt-4">
+      <p className="text-sm text-center mt-6 text-gray-600">
         {mode === "login"
-          ? "You don't have an account? "
+          ? "Don't have an account? "
           : "Already have an account? "}
         <a
           href={mode === "login" ? "/signup" : "/login"}
-          className="text-blue-600 hover:underline"
+          className="text-blue-600 hover:text-blue-500 font-medium"
         >
-          {mode === "login" ? "Signup" : "Login"}
+          {mode === "login" ? "Sign up" : "Sign in"}
         </a>
       </p>
     </div>

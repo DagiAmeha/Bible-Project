@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
 
 export default function PlansPage() {
-  redirect("/plans/all");
+  redirect("/plans/my");
 }

@@ -21,10 +21,8 @@ export default function LoginPage() {
 
   if (status === "loading") {
     return (
-      <div className="min-h-screen flex flex-col">
-        <main className="flex-1 container mx-auto px-4 grid place-items-center py-12">
-          <div>Loading...</div>
-        </main>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-gray-600">Loading...</div>
       </div>
     );
   }
@@ -34,10 +32,8 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <main className="flex-1 container mx-auto px-4 grid place-items-center py-12">
-        <AuthCard mode="login" />
-      </main>
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+      <AuthCard mode="login" />
     </div>
   );
 }

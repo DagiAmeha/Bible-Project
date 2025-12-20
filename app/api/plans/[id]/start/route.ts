@@ -21,6 +21,8 @@ export async function POST(
     const userId = session.user.id;
     const planId = params.id;
 
+    const { duration } = await req.json();
+
     // Prevent duplicates
     const exists = await UserPlan.findOne({ userId, planId });
     if (exists)
@@ -32,6 +34,7 @@ export async function POST(
     const userPlan = await UserPlan.create({
       userId,
       planId,
+      totalDays: duration,
       currentDay: 1,
       progress: 0,
       isCompleted: false,

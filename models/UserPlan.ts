@@ -7,7 +7,7 @@ export interface IUserPlan extends Document {
   completedAt?: Date;
   isCompleted: boolean;
   progress: number; // 0–100
-  currentDay: number; // 1,2,3...
+  totalDays: number; // 1,2,3...
 }
 
 const UserPlanSchema = new Schema<IUserPlan>(
@@ -43,14 +43,11 @@ const UserPlanSchema = new Schema<IUserPlan>(
 
     progress: {
       type: Number,
-      default: 0, // you can update this based on daily progress
-      min: 0,
-      max: 100,
+      default: 0,
     },
-
-    currentDay: {
+    totalDays: {
       type: Number,
-      default: 1,
+      default: 0,
     },
   },
   {

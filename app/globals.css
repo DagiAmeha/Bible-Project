@@ -34,12 +34,12 @@
   --ring: 224.3 76.3% 48%;
 }
 
-html, body, :root {
+html,
+body,
+:root {
   height: 100%;
 }
 
 body {
-  @apply bg-background text-foreground;
+  @apply bg-gray-50 text-foreground;
 }
-
-
