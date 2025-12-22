@@ -108,12 +108,12 @@ export function AuthCard({ mode }: { mode: "login" | "signup" }) {
   };
 
   return (
-    <div className="w-full max-w-md bg-white rounded-lg border shadow-lg p-8">
-      <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-gray-900">
+    <div className="w-full max-w-md bg-white rounded-lg border shadow-lg p-6 md:p-8">
+      <div className="text-center mb-6 md:mb-8">
+        <h2 className="text-xl md:text-2xl font-bold text-gray-900">
           {mode === "login" ? t("Login") : t("Signup")}
         </h2>
-        <p className="text-gray-600 mt-2">
+        <p className="text-gray-600 mt-2 text-sm md:text-base">
           {mode === "login"
             ? "Welcome back! Please sign in to your account."
             : "Create your account to get started."}
@@ -126,7 +126,7 @@ export function AuthCard({ mode }: { mode: "login" | "signup" }) {
         </div>
       )}
 
-      <form className="space-y-6" onSubmit={onSubmit}>
+      <form className="space-y-4 md:space-y-6" onSubmit={onSubmit}>
         {mode === "signup" && (
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -199,7 +199,7 @@ export function AuthCard({ mode }: { mode: "login" | "signup" }) {
           onClick={async () => {
             await signIn("google");
           }}
-          className="mt-4 w-full flex items-center justify-center px-4 py-2 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors"
+          className="mt-4 w-full flex items-center justify-center px-4 py-3 md:py-2 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors min-h-[44px]"
         >
           <img src="/imgs/google.png" alt="Google" className="w-5 h-5 mr-3" />
           Continue with Google

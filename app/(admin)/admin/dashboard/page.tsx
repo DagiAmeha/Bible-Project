@@ -40,37 +40,35 @@ export default function AdminDashboardPageClient() {
   }, []);
 
   return (
-    <AdminDashboardLayout>
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
-          <p className="text-gray-600 mt-1">Overview and metrics</p>
-        </div>
-
-        {loading ? (
-          <div className="bg-white rounded-lg shadow-sm border p-6">
-            <div className="animate-pulse">Loading...</div>
-          </div>
-        ) : error ? (
-          <div className="bg-white rounded-lg shadow-sm border p-6">
-            <div className="text-red-600">{error}</div>
-          </div>
-        ) : (
-          <div className="bg-white rounded-lg shadow-sm border p-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              <AdminCard title="Total Users" value={data.totalUsers} />
-              <AdminCard title="Active Users Today" value={data.activeToday} />
-              <AdminCard title="Total Plans" value={data.totalPlans} />
-              <AdminCard title="User Plans Started" value={data.plansStarted} />
-              <AdminCard title="Plans Completed" value={data.plansCompleted} />
-              <AdminCard
-                title="Unread Support Messages"
-                value={data.unreadSupportMessages}
-              />
-            </div>
-          </div>
-        )}
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
+        <p className="text-gray-600 mt-1">Overview and metrics</p>
       </div>
-    </AdminDashboardLayout>
+
+      {loading ? (
+        <div className="bg-white rounded-lg shadow-sm border p-6">
+          <div className="animate-pulse">Loading...</div>
+        </div>
+      ) : error ? (
+        <div className="bg-white rounded-lg shadow-sm border p-6">
+          <div className="text-red-600">{error}</div>
+        </div>
+      ) : (
+        <div className="bg-white rounded-lg shadow-sm border p-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <AdminCard title="Total Users" value={data.totalUsers} />
+            <AdminCard title="Active Users Today" value={data.activeToday} />
+            <AdminCard title="Total Plans" value={data.totalPlans} />
+            <AdminCard title="User Plans Started" value={data.plansStarted} />
+            <AdminCard title="Plans Completed" value={data.plansCompleted} />
+            <AdminCard
+              title="Unread Support Messages"
+              value={data.unreadSupportMessages}
+            />
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

@@ -1,18 +1,19 @@
 "use client";
 
-import AdminDashboardLayout from "@/components/AdminDashboardLayout";
+import { AdminDashboardLayout } from "@/components/AdminDashboardLayout";
 import { AdminNavbar } from "@/components/AdminNavbar";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
-export default function UserLayout({
+export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     if (status === "unauthenticated" && !session) {
@@ -30,8 +31,13 @@ export default function UserLayout({
 
   return (
     <section>
-      <AdminNavbar />
-      <AdminDashboardLayout>{children}</AdminDashboardLayout>
+      <AdminNavbar onHamburgerClick={() => setIsSidebarOpen(true)} />
+      <AdminDashboardLayout
+        isSidebarOpen={isSidebarOpen}
+        onCloseSidebar={() => setIsSidebarOpen(false)}
+      >
+        {children}
+      </AdminDashboardLayout>
     </section>
   );
 }

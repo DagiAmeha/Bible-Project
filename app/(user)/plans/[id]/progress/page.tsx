@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Check, ArrowLeft, ArrowRight } from "lucide-react";
+import { getCurrentDay } from "@/utils/date";
 
 export interface Schedule {
   _id: string;
@@ -26,29 +27,6 @@ export interface Progress {
   userId: string;
   PlanId: string;
   dailyProgress: DailyProgress[];
-}
-
-// ✅ Utility: get current reading day based on plan start date
-function getCurrentDay(startDateString: string): number {
-  if (!startDateString) return 0;
-  const startDate = new Date(startDateString);
-  const today = new Date();
-
-  // Normalize to midnight to avoid timezone issues
-  const localStart = new Date(
-    startDate.getFullYear(),
-    startDate.getMonth(),
-    startDate.getDate()
-  );
-  const localToday = new Date(
-    today.getFullYear(),
-    today.getMonth(),
-    today.getDate()
-  );
-
-  const diffMs = localToday.getTime() - localStart.getTime();
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24)) + 1;
-  return diffDays < 1 ? 0 : diffDays;
 }
 
 export default function BookPlan({ params }: { params: { id: string } }) {
@@ -132,7 +110,7 @@ export default function BookPlan({ params }: { params: { id: string } }) {
   return loading ? (
     <div className="flex align-top justify-center p-8">Loading...</div>
   ) : (
-    <div className="px-4 py-8 transition-colors duration-300">
+    <div className="px-4 py-8 transition-colors duration-300 flex flex-col scrollbar-hide">
       <h1 className="text-2xl font-bold mb-8 text-gray-900 dark:text-gray-100">
         {schedule[0]?.planId.title} - Reading Progress
       </h1>
@@ -147,7 +125,6 @@ export default function BookPlan({ params }: { params: { id: string } }) {
         xl:grid-cols-5
         2xl:grid-cols-6
         mb-16
-    
       "
       >
         {currentPageSchedule.map((item: Schedule) => {
@@ -220,12 +197,15 @@ export default function BookPlan({ params }: { params: { id: string } }) {
 
       {/* Pagination controls */}
       {totalItems > ITEMS_PER_PAGE && (
-        <div className="mt-6 flex items-center justify-center">
-          {/* <div className="text-sm text-gray-600 dark:text-gray-300">
-            Showing {startIndex + 1} - {endIndex} of {totalItems}
-          </div> */}
-
-          <div className="flex items-center gap-8">
+        <div
+          className="
+      fixed
+      bottom-1/4
+      left-1/2
+      z-50
+    "
+        >
+          <div className="flex items-center gap-8 bg-white dark:bg-gray-800 px-6 py-3 rounded-xl shadow-lg">
             <button
               onClick={() => setCurrentPage((p) => Math.max(0, p - 1))}
               disabled={currentPage === 0}

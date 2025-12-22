@@ -6,6 +6,10 @@ import UserPlan from "@/models/UserPlan";
 import Message from "@/models/Message";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { getCurrentDay } from "@/utils/date";
+import { DailyProgress } from "@/types/progress";
+import Progress from "@/models/Progress";
+import { calculateStreak } from "@/lib/calculateStreak";
 
 export async function GET() {
   try {
@@ -19,22 +23,20 @@ export async function GET() {
       );
     }
 
-    const totalUsers = await User.countDocuments();
-    const startOfToday = new Date();
-    startOfToday.setHours(0, 0, 0, 0);
-    const activeToday = await User.countDocuments({
-      lastSeen: { $gte: startOfToday },
-    });
-    const totalPlans = await Plan.countDocuments();
-    const plansStarted = await UserPlan.countDocuments({});
-    const plansCompleted = await UserPlan.countDocuments({ isCompleted: true });
+    const userPlans = await UserPlan.find({ userId: session.user.id }).populate(
+      "plandId"
+    );
+    const progressRecords = await Progress.find({
+      userId: session.user.id,
+      planId: { $in: userPlans.map((p) => p.planId) },
+    }).lean();
 
-    const adminUsers = await User.find({ role: "admin" }).select("_id").lean();
-    const adminIds = adminUsers.map((a) => a._id);
-    const unreadSupportMessages = await Message.countDocuments({
-      receiverId: { $in: adminIds },
-      status: { $ne: "seen" },
-    });
+    const progress: DailyProgress[] = progressRecords.flatMap(
+      (record) => record.dailyProgress
+    );
+    const streak = calculateStreak(progress);
+
+    const currentDate = getCurrentDay();
 
     return NextResponse.json({
       status: "success",

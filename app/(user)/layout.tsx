@@ -1,10 +1,10 @@
 "use client";
 
 import { DashboardLayout } from "@/components/DashboardLayout";
-import { UserNavbar } from "@/components/UserNavbar";
+import { Navbar } from "@/components/Navbar";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function UserLayout({
   children,
@@ -13,6 +13,7 @@ export default function UserLayout({
 }) {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     if (status === "unauthenticated" && !session) {
@@ -30,8 +31,13 @@ export default function UserLayout({
 
   return (
     <section>
-      <UserNavbar />
-      <DashboardLayout>{children}</DashboardLayout>
+      <Navbar onHamburgerClick={() => setIsSidebarOpen(true)} />
+      <DashboardLayout
+        isSidebarOpen={isSidebarOpen}
+        onCloseSidebar={() => setIsSidebarOpen(false)}
+      >
+        {children}
+      </DashboardLayout>
     </section>
   );
 }

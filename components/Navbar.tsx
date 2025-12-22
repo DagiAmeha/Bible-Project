@@ -1,7 +1,5 @@
 "use client";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { ThemeToggle } from "./ThemeToggle";
 import { useTranslations } from "next-intl";
@@ -9,41 +7,16 @@ import { Logout } from "./Logout";
 import { useSession } from "next-auth/react";
 import { Menu } from "lucide-react";
 
-export function AdminNavbar({
+export function Navbar({
   onHamburgerClick,
 }: {
   onHamburgerClick?: () => void;
 }) {
   const { data: session, status } = useSession();
   const t = useTranslations("common");
-  const router = useRouter();
-  const [unread, setUnread] = useState<number>(0);
-
-  useEffect(() => {
-    let mounted = true;
-    const load = async () => {
-      try {
-        const res = await fetch("/api/chat", { cache: "no-store" });
-        if (!res.ok) return;
-        const body = await res.json();
-        const total = (body.chats || []).reduce(
-          (s: number, c: any) => s + (c.unreadCount || 0),
-          0
-        );
-        if (mounted) setUnread(total);
-      } catch (e) {
-        // ignore
-      }
-    };
-    load();
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
   return (
-    <header className="border-b">
-      <div className="container mx-auto px-4 h-14 flex items-center justify-between">
+    <header className="border-b border-gray-200 dark:border-gray-700">
+      <div className="container mx-auto px-4 md:px-8 h-14 flex items-center justify-between">
         <div className="flex items-center gap-4">
           {onHamburgerClick && (
             <button
@@ -53,12 +26,14 @@ export function AdminNavbar({
               <Menu className="h-6 w-6" />
             </button>
           )}
-          <Link href="/admin/dashboard" className="font-semibold">
+          <Link
+            href="/dashboard"
+            className="text-lg font-bold text-gray-900 dark:text-gray-100"
+          >
             {t("appTitle")}
           </Link>
         </div>
         <nav className="flex items-center gap-4 text-sm">
-          {/* <Link href="/profile" className="hover:underline">{t('profile')}</Link> */}
           <LanguageSwitcher />
           <ThemeToggle />
           {session && <Logout />}
