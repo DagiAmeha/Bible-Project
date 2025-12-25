@@ -1,22 +1,34 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
-import User from "@/models/User";
-import Plan from "@/models/Plan";
 import UserPlan from "@/models/UserPlan";
-import Message from "@/models/Message";
+import "@/models/Plan";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getCurrentDay } from "@/utils/date";
 import { DailyProgress } from "@/types/progress";
 import Progress from "@/models/Progress";
 import { calculateStreak } from "@/lib/calculateStreak";
+import Schedule from "@/models/Schedule";
+
+interface response {
+  planName: string;
+  totalDays: number;
+  todayReading: {
+    day: number;
+    portion: string;
+    books: string[];
+    status: string;
+  };
+  streak: number;
+  completionPercent: number;
+}
 
 export async function GET() {
   try {
     await connectDB();
 
     const session = await getServerSession(authOptions);
-    if (!session?.user || session.user.role !== "admin") {
+    if (!session?.user || session.user.role !== "user") {
       return NextResponse.json(
         { status: "fail", message: "Unauthorized" },
         { status: 401 }
@@ -24,30 +36,60 @@ export async function GET() {
     }
 
     const userPlans = await UserPlan.find({ userId: session.user.id }).populate(
-      "plandId"
+      "planId"
     );
-    const progressRecords = await Progress.find({
-      userId: session.user.id,
-      planId: { $in: userPlans.map((p) => p.planId) },
-    }).lean();
+    let response: response[] = [];
 
-    const progress: DailyProgress[] = progressRecords.flatMap(
-      (record) => record.dailyProgress
-    );
-    const streak = calculateStreak(progress);
+    for (let i = 0; i < userPlans.length; i++) {
+      const planName = userPlans[i].planId.name;
+      const totalDays = userPlans[i].planId.durationDays;
+      const { startDate } = userPlans[i].planId;
+      const currentDay = getCurrentDay(startDate);
 
-    const currentDate = getCurrentDay();
+      const todaySchedule = await Schedule.findOne({
+        planId: userPlans[i].planId._id,
+        day: currentDay,
+      }).lean();
+
+      if (!todaySchedule) continue;
+
+      const progressDoc = (await Progress.findOne({
+        userId: session.user.id,
+        planId: userPlans[i].planId._id,
+      }).lean()) as { dailyProgress?: DailyProgress[] } | null;
+
+      const dailyProgresses: DailyProgress[] = progressDoc?.dailyProgress ?? [];
+      const streak = calculateStreak(dailyProgresses);
+
+      const completedCount = dailyProgresses.filter((d) => d.completed).length;
+
+      const completionPercent = (completedCount / totalDays) * 100;
+
+      let status = "not read";
+      const readToday = dailyProgresses.filter(
+        (progress) => progress.day === currentDay
+      );
+      if (readToday.length > 0 && readToday[0].completed) {
+        status = "completed";
+      }
+
+      response.push({
+        planName,
+        totalDays,
+        todayReading: {
+          day: todaySchedule.day,
+          portion: todaySchedule.portion,
+          books: todaySchedule.books,
+          status,
+        },
+        streak,
+        completionPercent,
+      });
+    }
 
     return NextResponse.json({
       status: "success",
-      data: {
-        totalUsers,
-        activeToday,
-        totalPlans,
-        plansStarted,
-        plansCompleted,
-        unreadSupportMessages,
-      },
+      data: response,
     });
   } catch (error) {
     console.error(error);

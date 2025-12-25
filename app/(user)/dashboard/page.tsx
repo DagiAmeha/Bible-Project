@@ -8,11 +8,9 @@ import { BookOpen, Flame, FileText, CheckCircle } from "lucide-react";
 
 type TodayReading = {
   day: number;
-  books: {
-    name: string;
-    chapters: number[];
-    completed: boolean;
-  }[];
+  portion: string;
+  books: string[];
+  status: string;
 };
 
 type DashboardStats = {
@@ -20,6 +18,24 @@ type DashboardStats = {
   currentStreak: number;
   completionPercent: number;
 };
+
+type currentPlan = {
+  title: string;
+  day: number;
+  totalDays: number;
+};
+
+export function getChapterCount(portion: string): number {
+  // Extract the numeric part: "1–2", "3", "13–15"
+  const match = portion.match(/(\d+)(?:\s*[–-]\s*(\d+))?$/);
+
+  if (!match) return 0;
+
+  const start = parseInt(match[1], 10);
+  const end = match[2] ? parseInt(match[2], 10) : start;
+
+  return end - start + 1;
+}
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -31,11 +47,8 @@ export default function DashboardPage() {
   // -----------------------------
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [todayReading, setTodayReading] = useState<TodayReading | null>(null);
-  const [currentPlan, setCurrentPlan] = useState({
-    title: "New Testament Reading Plan",
-    day: 12,
-    totalDays: 106,
-  });
+  const [currentPlan, setCurrentPlan] = useState<currentPlan | null>(null);
+  const [loading, setLoading] = useState(false);
 
   // -----------------------------
   // Auth redirect
@@ -52,23 +65,34 @@ export default function DashboardPage() {
   // Mimic API calls
   // -----------------------------
   useEffect(() => {
-    // Fake API response
-    setStats({
-      chaptersReadToday: 2,
-      currentStreak: 5,
-      completionPercent: 18,
-    });
-
-    setTodayReading({
-      day: 12,
-      books: [
-        {
-          name: "Romans",
-          chapters: [5, 6],
-          completed: false,
-        },
-      ],
-    });
+    const fetchDashboardData = async () => {
+      try {
+        setLoading(true);
+        const res = await fetch("/api/user/dashboard");
+        const data = await res.json();
+        console.log("Dashboard data:", data);
+        if (data.status === "success") {
+          // For simplicity, we take the first plan's data
+          const firstPlan = data.data[0];
+          setStats({
+            chaptersReadToday: getChapterCount(firstPlan.todayReading.portion),
+            currentStreak: firstPlan.streak,
+            completionPercent: firstPlan.completionPercent, // Mocked value
+          });
+          setTodayReading(firstPlan.todayReading);
+          setCurrentPlan({
+            title: firstPlan.planName,
+            day: firstPlan.todayReading.day,
+            totalDays: firstPlan.totalDays,
+          });
+        }
+      } catch (error) {
+        console.error("Failed to fetch dashboard data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchDashboardData();
   }, []);
 
   if (status === "loading" || !stats || !todayReading) {
@@ -96,7 +120,11 @@ export default function DashboardPage() {
         <StatCard
           icon={<Flame />}
           title="Current Streak"
-          value={`${stats.currentStreak} days`}
+          value={`${
+            stats.currentStreak > 0
+              ? `${stats.currentStreak} days`
+              : "No streak"
+          } `}
           color="green"
         />
         <StatCard
@@ -113,34 +141,34 @@ export default function DashboardPage() {
           📖 Today’s Reading (Day {todayReading.day})
         </h2>
 
-        {todayReading.books.map((book) => (
-          <div
-            key={book.name}
-            className="flex items-center justify-between p-3 border rounded-md mb-2"
-          >
-            <div>
-              <p className="font-medium">{book.name}</p>
-              <p className="text-sm text-gray-600">
-                Chapters: {book.chapters.join(", ")}
-              </p>
-            </div>
-            <span
-              className={`text-sm font-medium ${
-                book.completed ? "text-green-600" : "text-orange-500"
-              }`}
-            >
-              {book.completed ? "Completed" : "Pending"}
-            </span>
+        <div
+          key={todayReading.books[0]}
+          className="flex items-center justify-between p-3 border rounded-md mb-2"
+        >
+          <div>
+            <p className="font-medium">{todayReading.books[0]}</p>
+            <p className="text-sm text-gray-600">
+              Chapters: {todayReading.portion}
+            </p>
           </div>
-        ))}
+          <span
+            className={`text-sm font-medium ${
+              todayReading.status === "completed"
+                ? "text-green-600"
+                : "text-orange-500"
+            }`}
+          >
+            {todayReading.status}
+          </span>
+        </div>
       </div>
 
       {/* Current Plan */}
       <div className="bg-white rounded-lg border p-5">
         <h2 className="text-lg font-semibold mb-2">📅 Current Plan</h2>
-        <p className="text-gray-700">{currentPlan.title}</p>
+        <p className="text-gray-700">{currentPlan?.title}</p>
         <p className="text-sm text-gray-600">
-          Day {currentPlan.day} of {currentPlan.totalDays}
+          Day {currentPlan?.day} of {currentPlan?.totalDays}
         </p>
 
         <div className="mt-4 flex gap-3">

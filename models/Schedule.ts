@@ -1,12 +1,23 @@
-import mongoose from "mongoose";
+import mongoose, { Schema, model, models } from "mongoose";
 
-const scheduleSchema = new mongoose.Schema({
-  planId: { type: mongoose.Schema.Types.ObjectId, ref: "Plan", required: true },
+// types/schedule.ts
+interface ScheduleDay {
+  _id: string;
+  planId: mongoose.Types.ObjectId;
+  day: number;
+  portion: string;
+  books: string[];
+  createdAt?: string;
+}
+// models/Schedule.ts
+
+const scheduleSchema = new Schema<ScheduleDay>({
+  planId: { type: Schema.Types.ObjectId, ref: "Plan", required: true },
   day: { type: Number, required: true },
   portion: { type: String, required: true },
   books: [{ type: String, required: true }],
   createdAt: { type: Date, default: Date.now },
 });
 
-const Schedule = mongoose.models.Schedule || mongoose.model("Schedule", scheduleSchema);
-export default Schedule;
+export default models.Schedule ||
+  model<ScheduleDay>("Schedule", scheduleSchema);

@@ -1,3 +1,4 @@
+import { Schema, model, models } from "mongoose";
 import mongoose from "mongoose";
 
 const planSchema = new mongoose.Schema({
@@ -10,4 +11,4 @@ const planSchema = new mongoose.Schema({
 });
 
 const Plan = mongoose.models.Plan || mongoose.model("Plan", planSchema);
-export default Plan;
+export default models.Plan || model("Plan", planSchema);
