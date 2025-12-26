@@ -47,10 +47,18 @@ export default function BookPlan({ params }: { params: { id: string } }) {
         const resSchedule = await fetch(`/api/plans/${params.id}/progress`);
         const dataSchedule = await resSchedule.json();
 
-        setSchedule(dataSchedule.schedules);
-        setReadDays(
-          new Set(dataSchedule.progress.map((item: DailyProgress) => item.day))
+        setSchedule(
+          Array.isArray(dataSchedule.schedules) ? dataSchedule.schedules : []
         );
+
+        setReadDays(
+          new Set(
+            Array.isArray(dataSchedule.progress)
+              ? dataSchedule.progress.map((item: DailyProgress) => item.day)
+              : []
+          )
+        );
+
         console.log("Schedule Data:", dataSchedule.schedules);
       } catch (error) {
         console.error("Error fetching schedule or progress:", error);
@@ -81,7 +89,7 @@ export default function BookPlan({ params }: { params: { id: string } }) {
   }, [schedule]);
 
   // Derived pagination values
-  const totalItems = schedule.length;
+  const totalItems = schedule?.length ?? 0;
   const totalPages = Math.max(1, Math.ceil(totalItems / ITEMS_PER_PAGE));
   const startIndex = currentPage * ITEMS_PER_PAGE;
   const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, totalItems);

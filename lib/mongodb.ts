@@ -1,30 +1,30 @@
 import mongoose from "mongoose";
 
-let isConnected = false; // Track connection status
+let cached = (global as any).mongoose;
 
-export const connectDB = async () => {
-  if (isConnected) {
-    console.log("✅ MongoDB already connected");
-    return;
-  }
+if (!cached) {
+  cached = (global as any).mongoose = { conn: null, promise: null };
+}
 
-  try {
-    const uri_text = process.env.DATABSE_STRING!;
+export async function connectDB() {
+  if (cached.conn) return cached.conn;
 
-    if (!uri_text) {
-      throw new Error("❌ MONGODB_URI is not defined in environment variables.");
+  if (!cached.promise) {
+    const base = process.env.DATABSE_STRING;
+    const pass = process.env.DATABASE_PASSWORD;
+
+    if (!base || !pass) {
+      throw new Error("MongoDB env variables not loaded");
     }
-    const uri = uri_text.replace('<db_password>', process.env.DATABASE_PASSWORD!)
-    // Connect to MongoDB
-    await mongoose.connect(uri, {
-      dbName: "bibleTracker", // your database name (optional)
+
+    const uri = base.replace("<db_password>", pass);
+
+    cached.promise = mongoose.connect(uri, {
+      dbName: "bibleTracker",
       bufferCommands: false,
     });
-
-    isConnected = true;
-    console.log("🚀 MongoDB connected successfully");
-  } catch (error) {
-    console.error("❌ MongoDB connection failed:", error);
-    throw error;
   }
-};
+
+  cached.conn = await cached.promise;
+  return cached.conn;
+}

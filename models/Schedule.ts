@@ -1,7 +1,7 @@
 import mongoose, { Schema, model, models } from "mongoose";
 
 // types/schedule.ts
-interface ScheduleDay {
+export interface ScheduleDay {
   _id: string;
   planId: mongoose.Types.ObjectId;
   day: number;

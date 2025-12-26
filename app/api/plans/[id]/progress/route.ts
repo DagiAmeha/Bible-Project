@@ -5,6 +5,7 @@ import Schedule from "@/models/Schedule";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import Progress from "@/models/Progress";
+import { Types } from "mongoose";
 
 export async function GET(
   req: Request,
@@ -12,6 +13,8 @@ export async function GET(
 ) {
   try {
     // console.log("Fetching progress for user:", userId, "and plan:", planId);
+    const planObjectId = new Types.ObjectId(params.id);
+
     await connectDB();
 
     const session = await getServerSession(authOptions);
@@ -24,7 +27,14 @@ export async function GET(
     const userId = session.user.id;
     const planId = params.id;
 
-    const schedules = await Schedule.find({ planId }).populate("planId");
+    console.log("User ID:", userId);
+    console.log("Plan ID:", planId);
+
+    const schedules = await Schedule.find({
+      planId: planObjectId,
+    }).populate("planId");
+
+    console.log("Fetched schedules:", schedules);
 
     if (!schedules || schedules.length === 0) {
       return NextResponse.json(

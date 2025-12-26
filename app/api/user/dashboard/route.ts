@@ -8,9 +8,10 @@ import { getCurrentDay } from "@/utils/date";
 import { DailyProgress } from "@/types/progress";
 import Progress from "@/models/Progress";
 import { calculateStreak } from "@/lib/calculateStreak";
-import Schedule from "@/models/Schedule";
+import Schedule, { ScheduleDay } from "@/models/Schedule";
 
 interface response {
+  id: string;
   planName: string;
   totalDays: number;
   todayReading: {
@@ -41,6 +42,7 @@ export async function GET() {
     let response: response[] = [];
 
     for (let i = 0; i < userPlans.length; i++) {
+      const id = userPlans[i]._id.toString();
       const planName = userPlans[i].planId.name;
       const totalDays = userPlans[i].planId.durationDays;
       const { startDate } = userPlans[i].planId;
@@ -49,7 +51,7 @@ export async function GET() {
       const todaySchedule = await Schedule.findOne({
         planId: userPlans[i].planId._id,
         day: currentDay,
-      }).lean();
+      }).lean<ScheduleDay | null>();
 
       if (!todaySchedule) continue;
 
@@ -63,7 +65,7 @@ export async function GET() {
 
       const completedCount = dailyProgresses.filter((d) => d.completed).length;
 
-      const completionPercent = (completedCount / totalDays) * 100;
+      const completionPercent = Math.round((completedCount / totalDays) * 100);
 
       let status = "not read";
       const readToday = dailyProgresses.filter(
@@ -74,6 +76,7 @@ export async function GET() {
       }
 
       response.push({
+        id,
         planName,
         totalDays,
         todayReading: {

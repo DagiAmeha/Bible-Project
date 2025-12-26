@@ -26,6 +26,7 @@ export async function POST(req: Request) {
       userId: session.user.id,
       planId,
     });
+    let userProgress;
 
     if (!progress) {
       // Create new progress document if none exists
@@ -45,6 +46,7 @@ export async function POST(req: Request) {
       } else {
         progress.dailyProgress.push({ day, completed: true });
       }
+      userProgress = progress.dailyProgress.length;
       await progress.save();
     }
 
@@ -53,7 +55,7 @@ export async function POST(req: Request) {
       planId,
     });
     if (userPlan && !userPlan.isCompleted) {
-      userPlan.progress = day;
+      userPlan.progress = userProgress || 0;
 
       // If progress reaches total days, mark as completed
       const totalDays = userPlan.totalDays || 0;

@@ -20,6 +20,7 @@ type DashboardStats = {
 };
 
 type currentPlan = {
+  id: string;
   title: string;
   day: number;
   totalDays: number;
@@ -81,6 +82,7 @@ export default function DashboardPage() {
           });
           setTodayReading(firstPlan.todayReading);
           setCurrentPlan({
+            id: firstPlan.id,
             title: firstPlan.planName,
             day: firstPlan.todayReading.day,
             totalDays: firstPlan.totalDays,
@@ -174,13 +176,13 @@ export default function DashboardPage() {
         <div className="mt-4 flex gap-3">
           <button
             className="px-4 py-2 bg-blue-600 text-white rounded-md text-sm"
-            onClick={() => router.push("/tracker/today")}
+            onClick={() => router.push(`/plans/${currentPlan?.id}/progress`)}
           >
             Continue Reading
           </button>
           <button
             className="px-4 py-2 border rounded-md text-sm"
-            onClick={() => router.push("/plan")}
+            onClick={() => router.push("/plans")}
           >
             View Plan
           </button>
